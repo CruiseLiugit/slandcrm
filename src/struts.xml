@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+	<!-- 告诉 Struts 框架，到哪里去找 class 对应的类名 -->
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	
+	<!-- <constant name="struts.devMode" value="true"></constant> -->
+	<!-- 上传的全部图片的最大限制 -->
+	<constant name="struts.multipart.maxSize" value="1024102400" />
+
+	<!-- 临时存放文件的路径 <constant name="struts.multipart.saveDir" value="d:/test" 
+		/> -->
+
+	<package name="admin" extends="struts-default" namespace="/">
+		<!-- 用户模块 -->
+		<action name="userinfo" class="com.sland.control.action.UserAction">
+			<!-- <result type="chain" name="login_ok"> <param name="actionName">category</param> 
+				<param name="method">findAllCategory</param> </result> -->
+			<result name="login_ok">/index.jsp</result>
+			<result name="login_error">/login.jsp</result>
+			<result name="logout_ok">/login.jsp</result>
+			<result name="singup_ok">/sign_up.jsp</result>
+			<result name="resetpwd_ok">/reset_password.jsp</result>
+		</action>
+
+		<!-- 菜单模块 -->
+		<action name="menu" class="com.sland.control.action.MenuAction">
+			<result name="index_page">/index.jsp</result>
+			<result name="magazine_page">/magazine.jsp</result>
+			<result name="periodical_page">/periodicals.jsp</result>
+			<result name="topic_page">/topic_list.jsp</result>
+			<result name="register_page">/sign_up.jsp</result>
+			<result name="modify_pwd">/reset_password.jsp</result>
+		</action>
+
+		<!-- 杂志模块 -->
+		<action name="magazine" class="com.sland.control.action.MagazineAction">
+			<result type="chain" name="addYear_ok">
+				<param name="actionName">menu</param>
+				<param name="method">magazinepage</param>
+			</result>
+			<result name="editYear">/magazine_edit.jsp</result>
+		</action>
+
+		<!-- 期刊模块 -->
+		<action name="periodical" class="com.sland.control.action.PeriodicalAction">
+			<!-- 限制图片的格式和图片的大小 -->
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">
+					image/bmp,image/png,image/gif,image/jpeg,image/pjpeg
+				</param>
+			</interceptor-ref>
+			<!-- 默认的拦截器，必须要写 -->
+			<interceptor-ref name="defaultStack" />
+
+			<result name="toadd">/periodical_add.jsp</result>
+			<result name="input">/periodical_add.jsp</result>
+			<result name="success">/periodicals.jsp</result>
+			<!-- 得到一个月份中的所有期刊缩略图 -->	
+			<result name="getmonth">/periodicals.jsp</result>
+			<!-- 得到选中的一个月份中的所有期刊列表 -->	
+			<result name="gettopiclist">/topic_list.jsp</result>
+			<!-- topic_list.jsp 中选中一个期刊，增加图片，跳转到 topic_add.jsp -->
+			<result name="readyadd">/topic_add.jsp</result>
+			<!-- topic_add.jsp 中选中一个期刊成功，跳转到 topic.jsp -->
+			<result name="add_ok">/topic.jsp</result>
+			<!-- topic_list.jsp 中选中一个期刊，删除期刊 -->
+			<result name="readydelete">/topic_list.jsp</result>
+			<!-- topic_add.jsp 中没有选中图片，点击 增加，返回增加界面并提示 -->
+			<result name="addtopicinput">/topic_add.jsp</result>
+			<!-- 201404 窗帘杂志新增，评论页面 -->
+			<!-- topic_add.jsp 中选中一个图片，跳转到评论页面 comment_add.jsp -->
+			<result name="to_comment">/comment_add.jsp</result>
+		</action>
+
+
+		<!-- 评论模块 -->
+		<action name="comments" class="com.sland.control.action.CommentAction">
+			<result name="add_ok">/pinglun_list.jsp</result>
+		</action>
+
+		<!-- 文件上传Demo -->
+		<action name="fileupload" class="com.sland.control.action.FileUploadDemoAction">
+			<!-- 限制图片的格式和图片的大小 -->
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">
+					image/bmp,image/png,image/gif,image/jpeg,image/pjpeg
+				</param>
+			</interceptor-ref>
+			<!-- 默认的拦截器，必须要写 -->
+			<interceptor-ref name="defaultStack" />
+			<result name="input">/fileUpload.jsp</result>
+			<result name="success">/fileUploadShow.jsp</result>
+		</action>
+
+		<!-- 文件上传 Demo2 同时传递 text -->
+		<!-- 文件上传Demo -->
+		<action name="FileUpload2" class="com.sland.control.action.demo.FileUpload">
+			<!-- 限制图片的格式和图片的大小 -->
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">
+					image/bmp,image/png,image/gif,image/jpeg,image/pjpeg
+				</param>
+			</interceptor-ref>
+			<!-- 默认的拦截器，必须要写 -->
+			<interceptor-ref name="defaultStack" />
+			<result name="input">/fileup.jsp</result>
+			<result name="success">/fileup_ok.jsp</result>
+		</action>
+		
+		
+		<!-- 测试Tomcat Webapps 目录中 Resource 目录的 Demo -->
+		<action name="testtomcat" class="com.sland.control.action.TestTomcarWebappsAction">
+			<result name="test_ok">/login.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>    
